@@ -37,6 +37,4 @@ struct ArgParser<float>
     }
 };
 
-// TODO: добавьте парсеры
-
 } // namespace repl
