@@ -1,17 +1,21 @@
 #ifndef REPL_COMPLEX_PARSER_H
 #define REPL_COMPLEX_PARSER_H
 #include <complex>
+#include <format>
 namespace repl
 {
 template<class T>
 struct ArgParser;
+bool isDigit(char c){
+    return c >= '0' && c <= '9';
+}
 
 template<>
 struct ArgParser<std::complex<float>>
 {
     static std::complex<float> parse(std::string_view str)
     {
-        if (str.at(str.size() - 1) != 'i')
+        if (isDigit(str.at(str.size() - 1)))
         {
             return std::complex{std::stof(static_cast<std::string>(str))};
         }
@@ -21,8 +25,17 @@ struct ArgParser<std::complex<float>>
         {
             if (str[i] == '+' || str[i] == '-')
             {
-                splitPos = i;
-                break;
+                if (splitPos == -1)
+                {
+                    splitPos = i;
+                }
+                else
+                {
+                    throw std::runtime_error("Incorrect format for complex number");
+                }
+            }
+            else if (str[i] != 'i' && (!isDigit(str[i]))){
+                throw std::runtime_error("Wrong character for complex number");
             }
         }
         if (splitPos == -1)
@@ -36,11 +49,11 @@ struct ArgParser<std::complex<float>>
 
         float real = 0;
         float imaginary = 0;
-        if (realString.size() > 0)
+        if (!realString.empty())
         {
             real = std::stof(static_cast<std::string>(realString));
         }
-        if (imaginaryString.size() > 0)
+        if (!imaginaryString.empty())
         {
             imaginary = std::stof(static_cast<std::string>(imaginaryString));
         }
