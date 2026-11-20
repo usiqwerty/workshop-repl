@@ -6,16 +6,14 @@ namespace repl
 {
 template<class T>
 struct ArgParser;
-bool isDigit(char c){
-    return c >= '0' && c <= '9';
-}
+
 
 template<>
 struct ArgParser<std::complex<float>>
 {
     static std::complex<float> parse(std::string_view str)
     {
-        if (isDigit(str.at(str.size() - 1)))
+        if (std::isdigit(str.at(str.size() - 1)))
         {
             return std::complex{std::stof(static_cast<std::string>(str))};
         }
@@ -34,7 +32,7 @@ struct ArgParser<std::complex<float>>
                     throw std::runtime_error("Incorrect format for complex number");
                 }
             }
-            else if (str[i] != 'i' && (!isDigit(str[i]))){
+            else if (str[i] != 'i' && !(std::isdigit(str[i]) || str[i] == '.')){
                 throw std::runtime_error("Wrong character for complex number");
             }
         }
