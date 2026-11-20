@@ -6,6 +6,7 @@
 
 #include "command.hpp"
 #include "repl.hpp"
+#include "complex_parser.h"
 
 namespace repl
 {
@@ -36,9 +37,41 @@ public:
     }
 };
 
-// TODO: добавьте команды для работы с комплексными числами
+class ComplexAdd : public repl::BaseCommand<ComplexAdd, std::complex<float>, std::complex<float>, std::complex<float>>
+{
+public:
+    const std::string_view longName = "cadd";
+    const std::string_view shortName = "ca";
+    ComplexAdd() = default;
+    std::complex<float> operator()(const std::complex<float> a, const std::complex<float> b) const
+    {
+        return a + b;
+    }
+};
+class ComplexMul : public repl::BaseCommand<ComplexMul, std::complex<float>, std::complex<float>, std::complex<float>>
+{
+public:
+    const std::string_view longName = "cmul";
+    const std::string_view shortName = "cm";
+    ComplexMul() = default;
+    std::complex<float> operator()(const std::complex<float> a, const std::complex<float> b) const
+    {
+        return a * b;
+    }
+};
+class ComplexAbs : public repl::BaseCommand<ComplexAbs, float, std::complex<float>>
+{
+public:
+    const std::string_view longName = "cabs";
+    const std::string_view shortName = "abs";
+    ComplexAbs() = default;
+    float operator()(const std::complex<float> a) const
+    {
+        return abs(a);
+    }
+};
 
-using Repl = ::repl::Repl<Multiply, SquareRoot>;
+using Repl = ::repl::Repl<Multiply, SquareRoot, ComplexAdd, ComplexMul, ComplexAbs>;
 
 } // namespace calculator
 } // namespace repl
