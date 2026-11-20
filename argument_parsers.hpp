@@ -37,4 +37,30 @@ struct ArgParser<float>
     }
 };
 
+template<>
+struct ArgParser<std::string_view>
+{
+    static std::string_view parse(std::string_view str)
+    {
+        return str;
+    }
+};
+template<>
+struct ArgParser<char>
+{
+    static char parse(std::string_view str)
+    {
+        return str.at(0);
+    }
+};
+
+template<>
+struct ArgParser<std::size_t>
+{
+    static std::size_t parse(std::string_view str)
+    {
+        return std::stol(std::string {str});
+    }
+};
+
 } // namespace repl
